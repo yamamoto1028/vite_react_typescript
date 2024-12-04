@@ -2,24 +2,26 @@
 
 import { useEffect, useState } from "react";
 import axios from "../../axios";
+import { Movie, TmdbResponse } from "../../type";
 
 // ②データの整形
-export type Movie = {
-  id: string;
-  name: string;
-  poster_path: string;
-  backdrop_path: string;
-};
+// type.tsに移植
+// export type Movie = {
+//   id: string;
+//   name: string;
+//   poster_path: string;
+//   backdrop_path: string;
+// };
 
-type TmdbResponse = {
-  results: Array<{
-    id: string;
-    name?: string;
-    title?: string;
-    poster_path: string;
-    backdrop_path: string;
-  }>;
-};
+// type TmdbResponse = {
+//   results: Array<{
+//     id: string;
+//     name?: string;
+//     title?: string;
+//     poster_path: string;
+//     backdrop_path: string;
+//   }>;
+// };
 
 export const useProps = (fetchUrl: string) => {
   const [movies, setMovies] = useState<Movie[]>([]); // ①APIの取得はuseEffectを使う
