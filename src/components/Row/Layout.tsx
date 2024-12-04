@@ -1,6 +1,6 @@
 // コンポーネントのUI部分を定義している
 
-import { Movie } from "./useProps.ts";
+import { Movie } from "../../type";
 
 type LayoutProps = {
   title?: string;
