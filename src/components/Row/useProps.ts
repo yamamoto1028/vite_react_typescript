@@ -2,30 +2,12 @@
 
 import { useEffect, useState } from "react";
 import axios from "../../axios";
-import { Movie, TmdbResponse } from "../../type";
-
-// ②データの整形
-// type.tsに移植
-// export type Movie = {
-//   id: string;
-//   name: string;
-//   poster_path: string;
-//   backdrop_path: string;
-// };
-
-// type TmdbResponse = {
-//   results: Array<{
-//     id: string;
-//     name?: string;
-//     title?: string;
-//     poster_path: string;
-//     backdrop_path: string;
-//   }>;
-// };
+import { Movie, TmdbResponse, VideoResponse } from "../../type";
+import { requests } from "../../request";
 
 export const useProps = (fetchUrl: string) => {
   const [movies, setMovies] = useState<Movie[]>([]); // ①APIの取得はuseEffectを使う
-
+  const [trailerUrl, setTrailerUrl] = useState<string | null>("");
   useEffect(() => {
     async function fetchData() {
       //非同期処理
@@ -38,12 +20,23 @@ export const useProps = (fetchUrl: string) => {
         backdrop_path: movie.backdrop_path,
       }));
       setMovies(movies);
-      // console.log(movies);
-
       return request;
     }
     fetchData();
   }, [fetchUrl]);
-
-  return movies;
+  const handleClick = async (movie: Movie) => {
+    if (trailerUrl) {
+      setTrailerUrl("");
+    } else {
+      const moviePlayUrl = await axios.get<VideoResponse>(
+        requests.fetchMovieVideos(movie.id)
+      );
+      setTrailerUrl(moviePlayUrl.data.results[0]?.key);
+    }
+  };
+  return {
+    movies,
+    trailerUrl,
+    handleClick,
+  };
 };

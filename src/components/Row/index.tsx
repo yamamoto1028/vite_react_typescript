@@ -4,17 +4,13 @@ import { useProps } from "./useProps";
 import { Layout } from "./Layout";
 
 type Props = {
-  title?: string;
+  title: string;
   fetchUrl: string;
   isLargeRow?: boolean;
 };
 
 export const Row = ({ title, fetchUrl, isLargeRow }: Props) => {
-  const movies = useProps(fetchUrl);
-
-  if (!movies.length) {
-    return <p>Loading...</p>; // ローディング状態を表示
-  }
-
-  return <Layout title={title} movies={movies} isLargeRow={isLargeRow} />;
+  return (
+    <Layout title={title} isLargeRow={isLargeRow} {...useProps(fetchUrl)} />
+  );
 };
