@@ -1,29 +1,47 @@
 // コンポーネントのロジック部分を定義している
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "../../axios";
-import { Movie, TmdbResponse, VideoResponse } from "../../type";
-import { requests } from "../../request";
+import { useQuery } from "@tanstack/react-query";
+import { Movie, TmdbResponse, VideoResponse } from "../../type.ts";
+import { requests } from "../../request.ts";
 
-export const useProps = (fetchUrl: string) => {
-  const [movies, setMovies] = useState<Movie[]>([]); // ①APIの取得はuseEffectを使う
+export const useProps = (fetchUrl: string, title: string) => {
+  // const [movies, setMovies] = useState<Movie[]>([]); // ①APIの取得はuseEffectを使う
   const [trailerUrl, setTrailerUrl] = useState<string | null>("");
-  useEffect(() => {
-    async function fetchData() {
-      //非同期処理
-      const request = await axios.get<TmdbResponse>(fetchUrl);
-      // ②データの整形
-      const movies = request.data.results.map((movie) => ({
-        id: movie.id,
-        name: movie.name || movie.title || "Unknown",
-        poster_path: movie.poster_path,
-        backdrop_path: movie.backdrop_path,
-      }));
-      setMovies(movies);
-      return request;
-    }
-    fetchData();
-  }, [fetchUrl]);
+  const fetchData = async () => {
+    const request = await axios.get<TmdbResponse>(fetchUrl);
+    return request.data.results.slice(0, 10).map((movie: Movie) => ({
+      id: movie.id,
+      name: movie.name,
+      poster_path: movie.poster_path,
+      backdrop_path: movie.backdrop_path,
+    }));
+  };
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     //非同期処理
+  //     const request = await axios.get<TmdbResponse>(fetchUrl);
+  //     // ②データの整形
+  //     const movies = request.data.results.map((movie) => ({
+  //       id: movie.id,
+  //       name: movie.name || movie.title || "Unknown",
+  //       poster_path: movie.poster_path,
+  //       backdrop_path: movie.backdrop_path,
+  //     }));
+  //     setMovies(movies);
+  //     return request;
+  //   }
+  //   fetchData();
+  // }, [fetchUrl]);
+
+  // react-queryを用いてfetchDataを実行
+  // const { data: movies, isLoading } = useQuery(`${title}/movies`, fetchData);←ver.4の書き方。ver.5だと型エラーが出るのが正常。
+  const { data: movies, isLoading } = useQuery({
+    queryKey: [title, "/movies"],
+    queryFn: fetchData,
+  });
+
   const handleClick = async (movie: Movie) => {
     if (trailerUrl) {
       setTrailerUrl("");
@@ -34,9 +52,21 @@ export const useProps = (fetchUrl: string) => {
       setTrailerUrl(moviePlayUrl.data.results[0]?.key);
     }
   };
+
+  // const handleClick = async (movie: Movie) => {
+  //   if (trailerUrl) {
+  //     setTrailerUrl("");
+  //   } else {
+  //     const moviePlayUrl = await axios.get<VideoResponse>(
+  //       requests.fetchMovieVideos(movie.id)
+  //     );
+  //     setTrailerUrl(moviePlayUrl.data.results[0]?.key);
+  //   }
+  // };
   return {
     movies,
     trailerUrl,
     handleClick,
+    isLoading,
   };
 };
