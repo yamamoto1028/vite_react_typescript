@@ -64,7 +64,7 @@ export const useProps = (fetchUrl: string, title: string) => {
   //   }
   // };
   return {
-    movies,
+    movies: movies ?? [],
     trailerUrl,
     handleClick,
     isLoading,
