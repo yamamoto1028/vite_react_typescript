@@ -16,7 +16,6 @@ function App() {
         <Row
           title={"NetflixOriginals"}
           fetchUrl={requests.fetchNetflixOriginals}
-          isLargeRow={true}
         />
         <Row title={"TopRated"} fetchUrl={requests.fetchTopRated} />
         <Row title={"ActionMovies"} fetchUrl={requests.fetchActionMovies} />
