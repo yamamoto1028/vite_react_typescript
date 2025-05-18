@@ -1,9 +1,7 @@
 // コンポーネントのUI部分を定義している
 import YouTube from "react-youtube";
-import { Movie } from "../../type.ts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { BannerDataContext } from "../../BannerDataContext.tsx";
-
 
 type Props = {
   truncate: (str: string | undefined, n: number) => string;
@@ -17,18 +15,18 @@ type Options = {
     autoplay: 0 | 1 | undefined;
     controls: 0 | 1 | undefined;
     modestbranding: 0 | 1 | undefined;
-    loop:0 | 1 | undefined;
+    loop: 0 | 1 | undefined;
     fs: 0 | 1 | undefined;
     cc_load_policty: 0 | 1 | undefined;
     iv_load_policy: 3 | 1 | undefined;
     autohide: 0 | 1 | undefined;
     playlist: string | null;
-  }
-}
+  };
+};
 
 export const Layout = ({ truncate }: Props) => {
   // ③グローバルステートの参照
-  const { trailerUrl, movie, isMuted } =useContext(BannerDataContext);
+  const { trailerUrl, movie, isMuted } = useContext(BannerDataContext);
   const opts: Options = {
     height: "100%",
     width: "100%",
@@ -38,15 +36,26 @@ export const Layout = ({ truncate }: Props) => {
       modestbranding: 1,
       loop: 1,
       fs: 1,
-      iv_load_policy: 3 | 1 | undefined;
-      autohide: 0 | 1 | undefined;
-      playlist: string | null;
+      cc_load_policty: 0,
+      iv_load_policy: 3,
+      autohide: 1,
+      playlist: trailerUrl,
     },
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const playerRef = useRef<any>(null);
+
+  // ② 音声On/OffをYoutubeトレイラーに渡す
+  const setPlayerVolume = () => {
+    if (playerRef.current) {
+      playerRef.current.setVolume(isMuted ? 0 : 100);
+    }
   };
 
   // ②音声ON/OFFをYoutubeトレイラーに渡す
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onPlayerReady = (event: {targe: any}) => {
+  const onPlayerReady = (event: { target: any }) => {
     playerRef.current = event.target;
     setPlayerVolume();
     playerRef.current.playVideo();
@@ -60,7 +69,6 @@ export const Layout = ({ truncate }: Props) => {
   const image_url = "https://image.tmdb.org/t/p/original";
 
   return (
-    
     <header
       className="text-white h-[672px] bg-cover bg-center bg-no-repeat"
       style={{
@@ -70,8 +78,8 @@ export const Layout = ({ truncate }: Props) => {
         backgroundPosition: "center center",
       }}
     >
-    {/* ①Youtubeトレイラーの移行 */}
-     {/* ③ グローバルステートの参照 */}
+      {/* ①Youtubeトレイラーの移行 */}
+      {/* ③ グローバルステートの参照 */}
       {trailerUrl ? (
         <YouTube
           videoId={trailerUrl}

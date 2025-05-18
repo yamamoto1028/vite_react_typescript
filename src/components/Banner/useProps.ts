@@ -23,7 +23,10 @@ export const useProps = () => {
     };
   };
 
-  const { data } = useQuery({
+  const { data } = useQuery<{
+    movieData: Movie;
+    movieUrl: string | undefined;
+  }>({
     queryKey: ["movie"],
     queryFn: fetchMovie,
   });
