@@ -6,6 +6,7 @@ import { FiVolume2, FiVolumeX } from "react-icons/fi";
 type Props = {
   show: boolean;
 };
+
 export const Layout = ({ show }: Props) => {
   // ②音声ON/OFFの切り替え
   const { isMuted, setIsMuted } = useContext(BannerDataContext);
@@ -25,7 +26,7 @@ export const Layout = ({ show }: Props) => {
           alt="Netflix Logo"
         />
         {/* // ① 音声On/Offアイコンの追加 */}
-        <button onClick={toggleMute} className="ml-4 focus:outline-none">
+        <button onClick={toggleMute} className="ml-24 focus:outline-none ">
           {isMuted ? <FiVolumeX /> : <FiVolume2 />}
         </button>
         <img

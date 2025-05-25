@@ -1,6 +1,6 @@
 // コンポーネントのロジック部分を定義している
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import axios from "../../axios";
 import { useQuery } from "@tanstack/react-query";
 import { Movie, TmdbResponse, VideoResponse } from "../../type.ts";
