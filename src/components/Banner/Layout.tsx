@@ -98,7 +98,7 @@ export const Layout = ({ truncate }: Props) => {
       )}
       <div className="relative z-0 ml-8 pt-36">
         <h1 className="text-4xl font-extrabold pb-1">{movie?.name}</h1>
-        <div className="w-[45rem] font-extrabold leading-[1.3] pt-4 text-base max-w-[360px] h-[80px]">
+        <div className="w-[45rem] font-extrabold leading-[1.3] pt-4 text-base max-w-[360px] min-h-[130px] bg-gray-900 bg-opacity-50">
           {movie && truncate(movie?.overview, 150)}
         </div>
       </div>
